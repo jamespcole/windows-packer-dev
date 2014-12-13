@@ -8,11 +8,24 @@ reg add "HKEY_CURRENT_USER\Control Panel\Desktop" /v Wallpaper /t REG_SZ /d C:\W
 copy /b/v/y a:\appsFolder.itemdata-ms "C:\Users\vagrant\AppData\Local\Microsoft\Windows\"
 copy /b/v/y a:\appsFolder.bak "C:\Users\vagrant\AppData\Local\Microsoft\Windows\appsFolder.itemdata-ms.bak"
 
-reg add "HKEY_USERS\.Default\Control Panel\International\sShortDate"=dd/mm/yyyy
+taskkill /f /im explorer.exe
 
-reg add "HKEY_USERS\.Default\Control Panel\International\sShortTime"=HH:mm
+start explorer.exe
 
-reg add "HKEY_USERS\.Default\Control Panel\International\sTimeFormat"=HH:mm:ss
+::Set the date and time to the correct format
+reg add "HKEY_CURRENT_USER\Control Panel\International" /t REG_SZ /v sShortDate /d "dd/MM/yyyy" /f
+
+reg add "HKEY_CURRENT_USER\Control Panel\International" /t REG_SZ /v sShortTime /d "HH:mm" /f
+
+reg add "HKEY_CURRENT_USER\Control Panel\International" /t REG_SZ /v sTimeFormat /d "HH:mm:ss" /f
+
+
+reg add "HKEY_USERS\.Default\Control Panel\International" /t REG_SZ /v sShortDate /d "dd/MM/yyyy" /f
+
+reg add "HKEY_USERS\.Default\Control Panel\International" /t REG_SZ /v sShortTime /d "HH:mm" /f
+
+reg add "HKEY_USERS\.Default\Control Panel\International" /t REG_SZ /v sTimeFormat /d "HH:mm:ss" /f
+
 
 ::DEL /F /S /Q /A "%AppData%\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\*"
 ::copy /y "%userprofile%\Desktop\Taskbar-Pinned-Apps-Backup\TaskBar" "%AppData%\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar" 

@@ -45,6 +45,9 @@ $databases = @(
             'Role' = 'db_owner';
          }
       );
+      'FixturesFiles' = @(
+         'C:\vagrant\your_project\database\fixtures.sql'
+      );
    }
 )
 
@@ -125,6 +128,53 @@ function CreateDatabasesAndUsers($databases, $serverAddress, $instanceName) {
 #remove this line if you don not want to create databases
 CreateDatabasesAndUsers $databases $serverAddress $instanceName
 
+
+#if you need to run database migrations then define them here
+#unfortunately Entity Framework and others need to be built before the migrations can be run so we just just build to a temp directry then execute
+#NOTE: for EF migration to work the configured connection string in your web.config or app.config should match one of the databases configured above
+$migrations = @(
+   @{      
+      Type = "EF";
+      BuildCommand = 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe "C:\vagrant\your_project\Your.Project\Your.Project.DAL\Your.Project.DAL.csproj" /p:VisualStudioVersion=12.0 /p:OutDir=$env:temp\build /p:Configuration=Release /t:Build';
+      MigrationExecutable = 'C:\vagrant\your_project\Your.Project\packages\EntityFramework.6.1.0\tools\migrate.exe';
+      OutputDir = "$env:temp\build";
+      MigrationsFile = 'Your.Project.DAL.dll';
+      ConfigFile = 'C:\vagrant\your_project\Your.Project\Your.Project.API\web.config';
+   }
+)
+
+foreach($migration in $migrations) 
+{
+   write-output "Running migration..."
+   $outputDir = $migration.OutputDir
+   write-output $migration.BuildCommand
+   iex "& $($migration.BuildCommand)"
+   Copy-Item $migration.MigrationExecutable "$($migration.OutputDir)"
+   $migrateCommand = "`"$($migration.OutputDir)\migrate.exe`" `"$($migration.MigrationsFile)`" /startupConfigurationFile=`"$($migration.ConfigFile)`""   
+   write-output $migrateCommand
+   iex "& $($migrateCommand)"
+   Remove-Item "$($migration.OutputDir)" -force -recurse -Confirm:$false
+}  
+
+
+import-module sqlps;
+
+foreach($database in $databases) 
+{
+   if ( $null -ne $database.FixturesFiles ) {
+      write-output "Processing fixtures for $($database.Name)..."
+      foreach($fixtureFile in $database.FixturesFiles) 
+      {
+        write-output "Processing fixture file $fixtureFile"
+        
+        $myData = invoke-sqlcmd -InputFile "$fixtureFile" -serverinstance "$serverAddress\$instanceName" -database $database.Name;
+        #$mydata | out-file c:\users\outputuser.sql;
+        write-output $myData
+        
+      }
+   } 
+}
+
 $vpn = get-vpnconnection -name "Test VPN" -erroraction SilentlyContinue
 if (!$vpn) {
    
@@ -133,4 +183,4 @@ else {
    Remove-VpnConnection -Name "Test VPN" -Force
 }
 
-add-vpnconnection -name "Test VPN" -serveraddress "vpn.example.com"  -splittunneling -usewinlogoncredential -tunneltype "pptp"
+add-vpnconnection -name "Test VPN" -serveraddress "vpn.example.com"  -splittunneling -usewinlogoncredential -tunneltype "Automatic"

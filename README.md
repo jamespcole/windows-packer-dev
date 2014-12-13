@@ -6,7 +6,7 @@ This packer build template will build a vagrant basebox with the following insta
 + IIS 8.5
 + Chrome 64 bit
 + SublimeText3
-+ Git
++ Git + Bash
 
 The purpose of this template is to provide an easy way to provision vagrant base boxes for windows development for you and your team.  
 It contains the basic tools necessary for windows development, you should place any project specific provisioning in your vagrant file.  
@@ -16,7 +16,7 @@ By default this template uses the evaluation version of Windows 8.1 enterprise w
 and product key read the "Product Keys" and Getting Started" section in the packer-windows ReadMe.md here https://github.com/joefitzgerald/packer-windows
 
 
-##Prerequisites:
+##Prerequisites
 Before you start you need to install the following:
 
 + Virtualbox >= 4.3.18 - https://www.virtualbox.org/
@@ -33,7 +33,7 @@ Clone this repository to you local machine
 
 `vagrant box add win81_dev win81_dev_virtualbox.box`
 
-Now copy the directory /examples/vagrant/Vagrantfile and /examples/vagrant/provisioning into the root of your project, then in the directory where you 
+Now copy /examples/vagrant/Vagrantfile and /examples/vagrant/provisioning into the root of your project, then in the directory where you 
 placed the Vagrantfile enter the command:
 
 `vagrant up`
