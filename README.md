@@ -16,23 +16,27 @@ By default this template uses the evaluation version of Windows 8.1 enterprise w
 and product key read the "Product Keys" and Getting Started" section in the packer-windows ReadMe.md here https://github.com/joefitzgerald/packer-windows
 
 
-#Prerequisites:
-+ Virtualbox >= 4.3.18
-++ https://www.virtualbox.org/
-+ Packer >= 0.7.2
-++ https://packer.io/
-+ Vagrant >= 1.6.5
-++ https://www.vagrantup.com/
+##Prerequisites:
+Before you start you need to install the following:
+
++ Virtualbox >= 4.3.18 - https://www.virtualbox.org/
++ Packer >= 0.7.2 - https://packer.io/
++ Vagrant >= 1.6.5 - https://www.vagrantup.com/
 
 
-#Instructions
+##Instructions
 To build the basebox with Windows 8.1 Enterprise Eval run the following:
 
 Clone this repository to you local machine
 
-packer build win81_dev.json
+`packer build win81_dev.json`
 
-vagrant box add win81_dev windows_81_virtualbox.box
+`vagrant box add win81_dev win81_dev_virtualbox.box`
+
+Now copy the directory /examples/vagrant/Vagrantfile and /examples/vagrant/provisioning into the root of your project, then in the directory where you 
+placed the Vagrantfile enter the command:
+
+`vagrant up`
 
 NOTE: make sure you have added packer to your path for the "packer" command to work from any directory
 
@@ -44,7 +48,17 @@ For an example of a Vagrantfile which is extremely useful for use with this base
 automatically provisioning databases, additional IIS components and some other goodies.
 
 
-#Notes
+##Customising the template
+If you are customising the template you may find it useful to set the "headless" property in the win81_dev.json file to false so that you can 
+see the GUI while the template is bulding.
+
+It may also be useful to speed things up by turning off windows updating during install while testing.  To switch off updates during installation 
+edit the answer_files/win81_dev/Autounattend.xml and comment in the section "WITHOUT WINDOWS UPDATES" and comment out the section "WITH WINDOWS UPDATES".
+
+To add or remove the apps that are to be installed during the build take a look at script/dev-tools.ps1 and add any windows features or chocolatey install commands there.  
+For various tweks and setting check out /scripts/customisations.bat
+
+##Notes
 This is heavily based on the packer-windows project by Joe Fitzgerald
 
 https://github.com/joefitzgerald/packer-windows
