@@ -8,15 +8,25 @@ This packer build template will build a vagrant basebox with the following insta
 + SublimeText3
 + Git
 
+The purpose of this template is to provide an easy way to provision vagrant base boxes for windows development for you and your team.  
+It contains the basic tools necessary for windows development, you should place any project specific provisioning in your vagrant file.  
+For an example of a useful vagrant file designed to be used with this basebox check out the "examples" directory.
+
+By default this template uses the evaluation version of Windows 8.1 enterprise with the default key.  If you wish to use your own ISO 
+and product key read the "Product Keys" and Getting Started" section in the packer-windows ReadMe.md here https://github.com/joefitzgerald/packer-windows
+
 
 #Prerequisites:
-Virtualbox
-Packer 
-Vagrant
++ Virtualbox >= 4.3.18
+++ https://www.virtualbox.org/
++ Packer >= 0.7.2
+++ https://packer.io/
++ Vagrant >= 1.6.5
+++ https://www.vagrantup.com/
 
 
-#Intructions
-To build the basebox with the KMS VLK version of Windows 8.1 Enterprise run the following:
+#Instructions
+To build the basebox with Windows 8.1 Enterprise Eval run the following:
 
 Clone this repository to you local machine
 

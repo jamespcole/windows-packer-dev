@@ -9,6 +9,13 @@ $features = @(
 )
 Enable-WindowsOptionalFeature -Online -FeatureName $features 
 
+
+write-output "Configuring IIS Site..."
+Import-Module "WebAdministration"
+Remove-Item 'iis:\Sites\Default Web Site' -force -recurse -Confirm:$false
+New-Item 'iis:\Sites\Default Web Site' -bindings @{protocol="http";bindingInformation=":80:"} -physicalPath c:\vagrant
+
+
 #import SQL Server module
 Import-Module SQLPS -DisableNameChecking
 

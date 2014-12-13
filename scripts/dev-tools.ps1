@@ -5,10 +5,10 @@ choco install sublimetext3.app
 
 choco install google-chrome-x64
 
-choco install git.install
+#choco install git.install
+choco install git.install -overrideArgs -installArgs '"/VERYSILENT /NORESTART /NOCANCEL /SP- /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS /NOICONS  /COMPONENTS="''icons,icons\quicklaunch,icons\desktop,ext,ext\reg,ext\reg\shellhere,assoc,assoc_sh''" /LOG"'
 
-#choco install rsat
-
+write-output "Enabling IIS Features..."
 $features = @(   
    "IIS-WebServerRole",
    "IIS-WebServer",
